@@ -1,0 +1,33 @@
+{
+    "name": "Quarkus&Mandrel",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "privileged": true, //comment this row or set to false if you dont need docker in docker
+    "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"], // comment this row if you dont need docker in docker
+
+    // if you need some port forwarding
+    // "forwardPorts": [
+    //     3000
+    // ],
+
+    "remoteUser": "devcon", //change this if you set a different user
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "DotJoshJohnson.xml",
+                "DavidAnson.vscode-markdownlint",
+                "redhat.vscode-quarkus",
+                "ggrebert.quarkus-snippets",
+                "vscjava.vscode-java-test",
+                "vscjava.vscode-java-debug",
+                "vscjava.vscode-maven",
+                "redhat.java"
+            ]
+        }
+    }, 
+    "workspaceFolder": "/workspaces/quarkus-project", // you can change folder name in Dockerfile
+    // "workspaceMount": "source=/your/path/here,target=/workspaces/quarkus-project,type=bind",
+    
+}
