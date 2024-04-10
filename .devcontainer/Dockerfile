@@ -30,8 +30,6 @@ RUN apt-get update && apt-get upgrade -y && apt install -y \
     sudo && \
     rm -rf /var/lib/apt/lists/*
 
-RUN if [[ -z "$IS_DOCKER_NEEDED" ]] ; then curl -sSL https://get.docker.com | sh && sudo usermod -aG docker $USERNAME ; else echo docker is not needed; fi
-
 #install java-mandrel
 WORKDIR /lib
 RUN wget ${MANDREL_LINK} -O mandrel.tar.gz && tar -xf mandrel.tar.gz && rm mandrel.tar.gz && \
@@ -49,5 +47,9 @@ USER $USERNAME
 SHELL ["/bin/bash", "-c"]
 RUN curl -s "https://get.sdkman.io" | bash && \
     source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install quarkus
+
+#Install docker
+USER root
+RUN if [[ -z "$IS_DOCKER_NEEDED" ]] ; then curl -sSL https://get.docker.com | sh && sudo usermod -aG docker $USERNAME ; else echo docker is not needed; fi
     
 COPY README.md /workspace/
