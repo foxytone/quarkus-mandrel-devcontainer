@@ -6,6 +6,7 @@
     },
     "privileged": true, //comment this row or set to false if you dont need docker in docker
     "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"], // comment this row if you dont need docker in docker
+    "runArgs": ["--network=macv"],
 
     // if you need some port forwarding
     // "forwardPorts": [
