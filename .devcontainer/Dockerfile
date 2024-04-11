@@ -3,7 +3,7 @@ ARG UBUNTU_IMG=ubuntu:22.04
 ARG USERNAME=devcon
 ARG USERPASS=passw0rd
 #Mandrel releases: https://github.com/graalvm/mandrel/releases
-ARG MANDREL_LINK=https://github.com/graalvm/mandrel/releases/download/mandrel-23.1.2.0-Final/mandrel-java21-linux-amd64-23.1.2.0-Final.tar.gz
+ARG MANDREL_LINK=http://github.com/graalvm/mandrel/releases/download/mandrel-23.1.2.0-Final/mandrel-java21-linux-amd64-23.1.2.0-Final.tar.gz
 #Set false if you don't need docker. Do not forget to remove --priveleged arg from devcontainer.json
 #and comment "mounts" property
 ARG IS_DOCKER_NEEDED=true
@@ -27,21 +27,23 @@ RUN apt-get update && apt-get upgrade -y && apt install -y \
     g++ \
     zlib1g-dev \
     libfreetype6-dev \
-    sudo && \
-    rm -rf /var/lib/apt/lists/*
+    iproute2 \
+    sudo
 
 #install java-mandrel
 WORKDIR /lib
-RUN wget ${MANDREL_LINK} -O mandrel.tar.gz && tar -xf mandrel.tar.gz && rm mandrel.tar.gz && \
+ADD ["$MANDREL_LINK", "/lib/mandrel.tar.gz"] 
+RUN tar -xf /lib/mandrel.tar.gz && \
+    rm mandrel.tar.gz && \
     mv /lib/$(ls /lib/ | grep mandrel) /lib/mandrel
 
 #Add user
 RUN useradd -m -s /bin/bash $USERNAME && \
     echo ${USERNAME}:${USERPASS} | chpasswd && \
     sudo adduser $USERNAME sudo
+
 #Create workspace
 RUN mkdir workspace
-USER $USERNAME
 
 #Install sdkman && quarkus cli
 SHELL ["/bin/bash", "-c"]
